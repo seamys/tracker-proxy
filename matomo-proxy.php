@@ -25,12 +25,15 @@ $filerequest = isset($_GET['file']) ? $_GET['file'] : null;
 if (empty($filerequest)) {
     $filerequest = isset($_POST['file']) ? $_POST['file'] : null;
 }
-
-if (!(isset($filerequest) && in_array($filerequest, $VALID_FILES))
-    && !(isset($module) && isset($action) && in_array("$module.$action", $SUPPORTED_METHODS))
-) {
-    http_response_code(404);
-    exit;
+if (isset($filerequest)) {
+    if (
+        !(isset($filerequest) && in_array($filerequest, $VALID_FILES))
+        && !(isset($module) && isset($action) && in_array("$module.$action", $SUPPORTED_METHODS))
+    ) {
+        if (!str_contains($filerequest, "js/container_")) {
+            http_response_code(404);
+            exit;
+        }
+    }
 }
-
 include __DIR__ . '/proxy.php';

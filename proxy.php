@@ -96,7 +96,11 @@ if ((empty($_GET) && empty($_POST)) || (isset($filerequest) && substr($filereque
             list($content, $httpStatus) = getHttpContentAndStatus($MATOMO_URL . $filerequest, $timeout, $user_agent);
         }
         if ($matomoJs = $content) {
-            echo $matomoJs;
+            //  Removes multi-line comments and does not create
+            //  a blank line, also treats white spaces/tabs 
+            $matomoJs = preg_replace('!^[ \t]*/\*.*?\*/[ \t]*[\r\n]!s', '', $matomoJs);
+            //  Removes single line '//' comments, treats blank characters
+            $matomoJs = preg_replace('![ \t]*//.*[ \t]*[\r\n]!', '', $matomoJs);
         } else {
             echo '/* there was an error loading matomo.js */';
         }
